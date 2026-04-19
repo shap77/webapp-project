@@ -33,7 +33,7 @@ body {
     --bs-gutter-x: 1rem;
 }
 
-/* немного уменьшим высоту карточек на мобильных */
+/* уменьшим для телефонов */
 @media (max-width: 768px) {
     .card {
         margin-bottom: 1rem;
