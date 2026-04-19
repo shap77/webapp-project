@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>{{ note.title }}</h2>
+        <p class="text-muted small">
+            <strong>Дата создания:</strong> {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}<br>
+            {% if note.category %}
+                <strong>Категория:</strong> {{ note.category.name }}<br>
+            {% endif %}
+            {% if note.is_favorite %}
+                <strong>Избранное:</strong> ⭐<br>
+            {% endif %}
+            {% if note.updated_at > note.created_at %}
+                <strong>Обновлено:</strong> {{ note.updated_at.strftime('%d.%m.%Y %H:%M') }}
+            {% endif %}
+        </p>
+
+        <p class="white-space-pre-wrap">{{ note.content or '(текст заметки отсутствует)' }}</p>
+
+        {% if note.attachments %}
+            <div class="mb-3">
+                {% for a in note.attachments %}
+                    <p><strong>Прикреплённый файл:</strong></p>
+                    <a href="{{ url_for('uploaded_file', filename=a.filename) }}"
+                       target="_blank">{{ a.filename }}</a>
+
+                    {% set ext = a.filename.rsplit('.', 1)[1].lower() %}
+                    {% if ext in ['jpg','jpeg','png','webp'] %}
+                        <div class="mt-2">
+                            <img src="{{ url_for('uploaded_file', filename=a.filename) }}"
+                                 alt="Вложение заметки"
+                                 class="img-fluid rounded">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="mt-3">
+            <a href="{{ url_for('notes.notes_edit', id=note.id) }}" class="btn btn-warning">Редактировать</a>
+            <a href="{{ url_for('notes.notes_index') }}" class="btn btn-outline-secondary ms-2">Назад к списку</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
