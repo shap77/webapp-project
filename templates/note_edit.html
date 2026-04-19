@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Создать заметку</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input class="form-control" type="text" id="title" name="title" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст заметки</label>
+                <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col-md-6">
+                    <label for="category_id" class="form-label">Категория</label>
+                    <select class="form-select" id="category_id" name="category_id">
+                        <option value="">Без категории</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox"
+                               id="is_favorite" name="is_favorite" value="1">
+                        <label class="form-check-label" for="is_favorite">
+                            Добавить в избранное ⭐
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="file" class="form-label">Файл к заметке (опционально)</label>
+                <input class="form-control" type="file" id="file" name="file">
+            </div>
+
+            <button type="submit" class="btn btn-success">Создать заметку</button>
+            <a href="{{ url_for('notes.notes_index') }}" class="btn btn-outline-secondary ms-2">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Создать заметку</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input class="form-control" type="text" id="title" name="title" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст заметки</label>
+                <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col-md-6">
+                    <label for="category_id" class="form-label">Категория</label>
+                    <select class="form-select" id="category_id" name="category_id">
+                        <option value="">Без категории</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}">
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox"
+                               id="is_favorite" name="is_favorite" value="1">
+                        <label class="form-check-label" for="is_favorite">
+                            Добавить в избранное ⭐
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="file" class="form-label">Файл к заметке (опционально)</label>
+                <input class="form-control" type="file" id="file" name="file">
+            </div>
+
+            <button type="submit" class="btn btn-success">Создать заметку</button>
+            <a href="{{ url_for('notes.notes_index') }}" class="btn btn-outline-secondary ms-2">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
