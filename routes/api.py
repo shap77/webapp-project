@@ -262,7 +262,7 @@ def api_delete_note(current_user_obj, note_id):
     return jsonify({'message': 'Заметка удалена'})
 
 
-# ============ Категории ============
+# категории
 @api_bp.route('/categories', methods=['GET'])
 @token_required
 def api_get_categories(current_user_obj):
@@ -273,7 +273,7 @@ def api_get_categories(current_user_obj):
     })
 
 
-# ============ Статистика ============
+# статистика
 @api_bp.route('/stats', methods=['GET'])
 @token_required
 def api_get_stats(current_user_obj):
