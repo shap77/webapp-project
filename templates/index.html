@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+    <h2>Ваши заметки</h2>
+
+    <form class="row g-3 mb-3" method="get">
+        <div class="col-auto">
+            <input class="form-control" type="text" name="search"
+                   value="{{ search or '' }}" placeholder="Поиск...">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" type="submit">Найти</button>
+        </div>
+        <div class="col-auto">
+            <a href="{{ url_for('notes.notes_create') }}" class="btn btn-success">
+                Создать заметку
+            </a>
+        </div>
+
+        <div class="col-auto">
+            <select class="form-select" name="category_id">
+                <option value="">Все категории</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}"
+                            {% if selected_category == cat.id|string %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="favorites" value="1"
+                       id="filter-favorites"
+                       {% if only_favorites == "1" %}checked{% endif %}>
+                <label class="form-check-label" for="filter-favorites">
+                    Только избранное
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <div class="mb-3">
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url_for('export.notes_export_txt') }}"
+               class="btn btn-outline-secondary btn-sm">
+               📄 Экспорт TXT
+            </a>
+            <a href="{{ url_for('export.notes_export_csv') }}"
+               class="btn btn-outline-secondary btn-sm">
+               📊 Экспорт CSV
+            </a>
+        </div>
+    </div>
+
+    {% if notes %}
+        <div class="row g-2">
+            {% for note in notes %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 border-top border-1 shadow-sm h-100 d-flex flex-column">
+                        {% if note.attachments %}
+                            {% set has_img = false %}
+                            {% for a in note.attachments %}
+                                {% set ext = a.filename.rsplit('.', 1)[1].lower() %}
+                                {% if ext in ['jpg','jpeg','png','webp'] and not has_img %}
+                                    <img src="{{ url_for('uploaded_file', filename=a.filename) }}"
+                                         class="card-img-top"
+                                         style="max-height: 140px; object-fit: cover; border-bottom: 1px solid #dee2e6;">
+                                    {% set has_img = true %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="card-body p-2 d-flex flex-column">
+                            <h6 class="card-title mb-0">{{ note.title }}</h6>
+                            <small class="text-muted mb-1">
+                                {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                {% if note.category %}
+                                    &nbsp;· {{ note.category.name }}
+                                {% endif %}
+                                {% if note.is_favorite %}
+                                    &nbsp;⭐
+                                {% endif %}
+                            </small>
+
+                            {% if note.content %}
+                                <div class="card-text small mb-1"
+                                     style="margin-top: 2.5rem; white-space: pre-wrap; max-height: 5rem; overflow-y: auto;">
+                                    {{ note.content }}
+                                </div>
+                            {% endif %}
+
+                            <div class="mt-auto pt-4">
+                                <div class="d-flex flex-wrap gap-1">
+                                    <a href="{{ url_for('notes.notes_view', id=note.id) }}"
+                                       class="btn btn-sm btn-outline-primary flex-fill"
+                                       style="padding: .25rem .5rem; font-size: 0.8rem;">
+                                       Открыть
+                                    </a>
+                                    <a href="{{ url_for('notes.notes_edit', id=note.id) }}"
+                                       class="btn btn-sm btn-outline-warning flex-fill"
+                                       style="padding: .25rem .5rem; font-size: 0.8rem;">
+                                       ✏️
+                                    </a>
+                                    <form method="POST" action="{{ url_for('notes.notes_delete', id=note.id) }}"
+                                          style="display: inline; flex: 1; margin: 0; padding: 0;">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger flex-fill"
+                                                style="padding: .25rem .5rem; font-size: 0.8rem; width: 100%;"
+                                                onclick="return confirm('Удалить заметку?')">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <h4>Нет заметок</h4>
+            <p>Создайте несколько заметок с разными категориями и отметьте некоторые как избранные для проверки фильтров.</p>
+            <a href="{{ url_for('notes.notes_create') }}"
+               class="btn btn-success btn-lg">
+               📝 Создать заметку
+            </a>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 text-center">
+            <h3>Добро пожаловать 👋</h3>
+            <p>Войдите или зарегистрируйтесь, чтобы управлять заметками.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary me-2">
+                Войти
+            </a>
+            <a href="{{ url_for('auth.register') }}"
+               class="btn btn-outline-secondary">
+               Регистрация
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
