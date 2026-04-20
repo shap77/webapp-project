@@ -300,7 +300,7 @@ def api_get_stats(current_user_obj):
 def api_docs():
     # документация api
     return jsonify({
-        'title': 'Notes Manager API',
+        'title': 'API документация',
         'version': '1.0.0',
         'endpoints': {
             'auth': {
@@ -308,7 +308,7 @@ def api_docs():
                 'POST /api/auth/login': 'Вход (получение токена)'
             },
             'notes': {
-                'GET /api/notes': 'Список заметок (с пагинацией и фильтрацией)',
+                'GET /api/notes': 'Список заметок (с фильтрацией)',
                 'GET /api/notes/{id}': 'Получить заметку',
                 'POST /api/notes': 'Создать заметку',
                 'PUT /api/notes/{id}': 'Обновить заметку',
@@ -321,5 +321,5 @@ def api_docs():
                 'GET /api/stats': 'Статистика пользователя'
             }
         },
-        'auth_method': 'Bearer {token} (в заголовке Authorization)'
+        'auth_method': 'Bearer {token} (передается в заголовке Authorization)'
     })
